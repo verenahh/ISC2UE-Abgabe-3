@@ -4,11 +4,20 @@
  * Selects a random full image at the start and displays it.
  */
 function showRandomImageAtStart() {
-    // TODO: Select all 6 links (<a>) in the thumbnail section. They contain the URLs to the full images.
-    // TODO: Select a random entry out of these 6.
-    // TODO: Implement switchFullImage() below.
-    // TODO: Call switchFullImage() with the URL of the random image and the alt attribute of the thumbnail (it contains the description).
-    // TODO: Set a background color (classes .bg-dark and .text-white) to the card-body of your random image (hint: it's the sibling element of your link).
+  // TODO: Select all 6 links (<a>) in the thumbnail section. They contain the URLs to the full images.
+  const linkSelector = document.querySelectorAll("#thumbnails a");
+  // TODO: Select a random entry out of these 6.
+  const renadomNumber = Math.floor(Math.random() * thumbnailLinks.length);
+  const randomEntry = linkSelector[renadomNumber];
+  // TODO: Implement switchFullImage() below. Check
+  // TODO: Call switchFullImage() with the URL of the random image and the alt attribute of the thumbnail (it contains the description).
+  const imageUrl = randomEntry.href;
+  const imageDescription = randomEntry.querySelector("img").alt;
+  switchFullImage(imageUrl, imageDescription);
+  // TODO: Set a background color (classes .bg-dark and .text-white) to the card-body of your random image (hint: it's the sibling element of your link).
+  const cardBody = randomEntry.nextElementSibling;
+  cardBody.classList.add("bg-dark", "text-white");
+  console.log("Thisworks1");
 }
 
 /**
@@ -17,27 +26,33 @@ function showRandomImageAtStart() {
  * - Set the highlight under the current thumbnail.
  * - Load the notes for the current image.
  */
-function prepareLinks() {
-    // TODO: Select all the 6 links (<a>) in the thumbnail section.
-    // TODO: Set an event listener for the click event on every <a> element.
-    //  (or advanced: think of a way to do it with one single handler)
+//DOM-EVENTLISTENER
+const advancedClickie = document.getElementsByClassName("card-link");
+advancedClickie.addEventListener("click", prepareLinks());
 
-    // TODO: The callback of the listener should do the following things:
-    //  - Remove the .bg-dark and .text-white classes from the card where it's currently set.
-    //  - Add both classes again to the card where the click happened (hint: "this" contains the very <a> element, where the click happened).
-    //  - Call switchFullImage() with the URL clicked link and the alt attribute of the thumbnail.
-    //  - Implement and then call loadNotes() with the key for the current image (hint: the full image's URL makes an easy and unique key).
-    //  - Prevent the default action for the link (we don't want to follow it).
+function prepareLinks() {
+  // TODO: Select all the 6 links (<a>) in the thumbnail section.
+  const linkSelector = document.querySelectorAll("#thumbnails a");
+  // TODO: Set an event listener for the click event on every <a> element.
+  //  (or advanced: think of a way to do it with one single handler) check above
+  // TODO: The callback of the listener should do the following things:
+  //  - Remove the .bg-dark and .text-white classes from the card where it's currently set.
+  cardBody.classList.remove("bg-dark", "text-white");
+  //  - Add both classes again to the card where the click happened (hint: "this" contains the very <a> element, where the click happened).
+  //CONTINUE HERE!
+  //  - Call switchFullImage() with the URL clicked link and the alt attribute of the thumbnail.
+  //  - Implement and then call loadNotes() with the key for the current image (hint: the full image's URL makes an easy and unique key).
+  //  - Prevent the default action for the link (we don't want to follow it).
 }
 
 /**
  * Stores or deletes the updated notes of an image after they have been changed.
  */
 function storeNotes() {
-    // TODO: Select the notes field and add a blur listener.
-    // TODO: When the notes field loses focus, store the notes for the current image in the local storage.
-    // TODO: If the notes field is empty, remove the local storage entry.
-    // TODO: Choose an appropriate key (hint: the full image's URL makes an easy and unique key).
+  // TODO: Select the notes field and add a blur listener.
+  // TODO: When the notes field loses focus, store the notes for the current image in the local storage.
+  // TODO: If the notes field is empty, remove the local storage entry.
+  // TODO: Choose an appropriate key (hint: the full image's URL makes an easy and unique key).
 }
 
 /**
@@ -47,10 +62,16 @@ function storeNotes() {
  * @param {string} imageDescription The image's description (used for the alt attribute and the figure's caption).
  */
 function switchFullImage(imageUrl, imageDescription) {
-    // TODO: Get the <img> element for the full image. Select it by its class or tag name.
-    // TODO: Set its src and alt attributes with the values from the parameters (imageUrl, imageDescription).
-    // TODO: Select the <figcaption> element.
-    // TODO: Set the description (the one you used for the alt attribute) as its text content.
+  // TODO: Get the <img> element for the full image. Select it by its class or tag name.
+  let fullImage = document.querySelector("#figure-img img");
+  // TODO: Set its src and alt attributes with the values from the parameters (imageUrl, imageDescription).
+  fullImage.src = imageUrl;
+  fullImage.alt = imageDescription;
+  // TODO: Select the <figcaption> element.
+  let figCaptionElement = document.querySelector("#figure-caption figcaption");
+  // TODO: Set the description (the one you used for the alt attribute) as its text content.
+  figCaptionElement.textContent = imageDescription;
+  console.log("Thisworks2");
 }
 
 /**
@@ -58,10 +79,10 @@ function switchFullImage(imageUrl, imageDescription) {
  * @param {string} key The key in local storage where the entry is found.
  */
 function loadNotes(key) {
-    // TODO: Select the notes field.
-    // TODO: Check the local storage at the provided key.
-    //  - If there's an entry, set the notes field's HTML content to the local storage's content.
-    //  - If there's no entry, set the default text "Enter your notes here!".
+  // TODO: Select the notes field.
+  // TODO: Check the local storage at the provided key.
+  //  - If there's an entry, set the notes field's HTML content to the local storage's content.
+  //  - If there's no entry, set the default text "Enter your notes here!".
 }
 
 /**
@@ -71,9 +92,9 @@ function loadNotes(key) {
  * @returns {number} A random integer value between min (included) and max (excluded).
  */
 function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 /**
