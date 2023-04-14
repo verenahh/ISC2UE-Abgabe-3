@@ -32,11 +32,11 @@ function prepareLinks() {
   //All done and working
 }
 
-//  Stores or deletes the updated notes of an image after they have been changed.
+//  Speichern und löschen von notizdaten sobald ein neues bild ausgewählt wird
 function storeNotes() {
   const notes = document.querySelector("#notes");
   notes.addEventListener("blur", function (event) {
-    const notesValue = event.target.value;
+    const notesValue = event.target.innerHTML;
     const imgUrl = document.querySelector(".figure-img");
     const key = imgUrl.src;
     localStorage.setItem(key, notesValue);
@@ -44,6 +44,7 @@ function storeNotes() {
       localStorage.removeItem(key);
     }
   });
+  //Working
 }
 
 /**
@@ -66,14 +67,16 @@ function switchFullImage(imageUrl, imageDescription) {
  * Loads the notes from local storage for a given key and sets the contents in the notes field with the ID notes.
  * @param {string} key The key in local storage where the entry is found.
  */
+//Lädt mögliche Notizen mit url-key parameter und fügt es bei den notizen ein oder plaziert default text
 function loadNotes(key) {
   const allNotes = document.querySelector("#notes");
   const checkStorage = localStorage.getItem(key);
   if (checkStorage !== null) {
-    allNotes.innerText = checkStorage;
+    allNotes.innerHTML = checkStorage;
   } else {
-    allNotes.innerText = "Enter your notes here!";
+    allNotes.innerHTML = "Enter your notes here!";
   }
+  //Works
 }
 
 /**
