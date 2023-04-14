@@ -1,58 +1,49 @@
 "use strict";
 
-/**
- * Selects a random full image at the start and displays it.
- */
+//Wählt mid math. beliebigen link tag aus, liest URL und Beschreibung aus, gibts an a andere function weiter und markiert des ausgewählte Bild
 function showRandomImageAtStart() {
-  // TODO: Select all 6 links (<a>) in the thumbnail section. They contain the URLs to the full images.
   const linkSelector = document.querySelectorAll("#thumbnails a");
-  // TODO: Select a random entry out of these 6.
-  const renadomNumber = Math.floor(Math.random() * thumbnailLinks.length);
-  const randomEntry = linkSelector[renadomNumber];
-  // TODO: Implement switchFullImage() below. Check
-  // TODO: Call switchFullImage() with the URL of the random image and the alt attribute of the thumbnail (it contains the description).
+  const randomNumber = Math.floor(Math.random() * linkSelector.length);
+  const randomEntry = linkSelector[randomNumber];
   const imageUrl = randomEntry.href;
   const imageDescription = randomEntry.querySelector("img").alt;
   switchFullImage(imageUrl, imageDescription);
-  // TODO: Set a background color (classes .bg-dark and .text-white) to the card-body of your random image (hint: it's the sibling element of your link).
   const cardBody = randomEntry.nextElementSibling;
   cardBody.classList.add("bg-dark", "text-white");
-  console.log("Thisworks1");
+  //All done and working
 }
 
-/**
- * Prepare the links on the full images so that they execute the following tasks:
- * - Switch the full image to the one that has been clicked on.
- * - Set the highlight under the current thumbnail.
- * - Load the notes for the current image.
- */
-//DOM-EVENTLISTENER
-const advancedClickie = document.getElementsByClassName("card-link");
-advancedClickie.addEventListener("click", prepareLinks());
-
+//Funktion mit integrierter callback/arrow-function die de bildmarkierungen ändert und die neue URL/Beschreibung selektiert
 function prepareLinks() {
-  // TODO: Select all the 6 links (<a>) in the thumbnail section.
   const linkSelector = document.querySelectorAll("#thumbnails a");
-  // TODO: Set an event listener for the click event on every <a> element.
-  //  (or advanced: think of a way to do it with one single handler) check above
-  // TODO: The callback of the listener should do the following things:
-  //  - Remove the .bg-dark and .text-white classes from the card where it's currently set.
-  cardBody.classList.remove("bg-dark", "text-white");
-  //  - Add both classes again to the card where the click happened (hint: "this" contains the very <a> element, where the click happened).
-  //CONTINUE HERE!
-  //  - Call switchFullImage() with the URL clicked link and the alt attribute of the thumbnail.
-  //  - Implement and then call loadNotes() with the key for the current image (hint: the full image's URL makes an easy and unique key).
-  //  - Prevent the default action for the link (we don't want to follow it).
+  linkSelector.forEach((newEvent) => {
+    newEvent.addEventListener("click", function (actualEvent) {
+      actualEvent.preventDefault();
+      const usedCardBody = document.querySelector(".bg-dark.text-white");
+      usedCardBody.classList.remove("bg-dark", "text-white");
+      this.nextElementSibling.classList.add("bg-dark", "text-white");
+      const imageUrl = this.href;
+      const imageDescription = this.querySelector("img").alt;
+      switchFullImage(imageUrl, imageDescription);
+      const key = imageUrl;
+      loadNotes(key);
+    });
+  });
+  //All done and working
 }
 
-/**
- * Stores or deletes the updated notes of an image after they have been changed.
- */
+//  Stores or deletes the updated notes of an image after they have been changed.
 function storeNotes() {
-  // TODO: Select the notes field and add a blur listener.
-  // TODO: When the notes field loses focus, store the notes for the current image in the local storage.
-  // TODO: If the notes field is empty, remove the local storage entry.
-  // TODO: Choose an appropriate key (hint: the full image's URL makes an easy and unique key).
+  const notes = document.querySelector("#notes");
+  notes.addEventListener("blur", function (event) {
+    const notesValue = event.target.value;
+    const imgUrl = document.querySelector(".figure-img");
+    const key = imgUrl.src;
+    localStorage.setItem(key, notesValue);
+    if (notesValue === "") {
+      localStorage.removeItem(key);
+    }
+  });
 }
 
 /**
@@ -61,17 +52,14 @@ function storeNotes() {
  * @param {string} imageUrl The URL to the new image (the image's src attribute value).
  * @param {string} imageDescription The image's description (used for the alt attribute and the figure's caption).
  */
+//i vasteh neh wos der kommentar/code da drüber bedeutet owa hey, i habs trotzdem gschafft dass de funktion drunter trotzdem des große Bild tauschen kann :D
 function switchFullImage(imageUrl, imageDescription) {
-  // TODO: Get the <img> element for the full image. Select it by its class or tag name.
-  let fullImage = document.querySelector("#figure-img img");
-  // TODO: Set its src and alt attributes with the values from the parameters (imageUrl, imageDescription).
+  const fullImage = document.querySelector(".figure-img");
   fullImage.src = imageUrl;
   fullImage.alt = imageDescription;
-  // TODO: Select the <figcaption> element.
-  let figCaptionElement = document.querySelector("#figure-caption figcaption");
-  // TODO: Set the description (the one you used for the alt attribute) as its text content.
+  let figCaptionElement = document.querySelector(".figure-caption");
   figCaptionElement.textContent = imageDescription;
-  console.log("Thisworks2");
+  //All done and working
 }
 
 /**
@@ -79,10 +67,13 @@ function switchFullImage(imageUrl, imageDescription) {
  * @param {string} key The key in local storage where the entry is found.
  */
 function loadNotes(key) {
-  // TODO: Select the notes field.
-  // TODO: Check the local storage at the provided key.
-  //  - If there's an entry, set the notes field's HTML content to the local storage's content.
-  //  - If there's no entry, set the default text "Enter your notes here!".
+  const allNotes = document.querySelector("#notes");
+  const checkStorage = localStorage.getItem(key);
+  if (checkStorage !== null) {
+    allNotes.innerText = checkStorage;
+  } else {
+    allNotes.innerText = "Enter your notes here!";
+  }
 }
 
 /**
@@ -96,7 +87,6 @@ function getRandomInt(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
 }
-
 /**
  * Gets the whole thing started.
  */
